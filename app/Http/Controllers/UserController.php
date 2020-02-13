@@ -4,7 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
-use App\User;
+use App\models\users;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
 use JWTAuth;
@@ -51,14 +51,34 @@ class UserController extends Controller
             return response()->json($validator->errors()->toJson(), 400);
         }
 
-        $user = User::create([
+        $user = users::create([
             'name' => $request->get('name'),
             'email' => $request->get('email'),
             'password' => Hash::make($request->get('password')),
         ]);
 
-        $token = JWTAuth::fromUser($user);
+
+        $customClaims = ['admin' => 1];
+
+
+        //$token = JWTAuth::fromUser($user, $customClaims);
+        $token = JWTAuth::customClaims($customClaims)->fromUser($user);
 
         return response()->json(compact('user', 'token'), 201);
+    }
+
+    public function testPayload()
+    {
+
+        /*  $token = JWTAuth::getToken();
+        $apy = JWTAuth::getPayload($token)->toArray();
+        var_dump($apy);  */
+
+        $payload = JWTAuth::parseToken()->getPayload();
+        $aaaa =  $payload->get('admin');
+        var_dump($aaaa);
+        echo $aaaa;
+
+        //ar_dump(JWTAuth::getPayload()->get('name'));
     }
 }

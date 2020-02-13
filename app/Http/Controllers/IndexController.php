@@ -18,6 +18,11 @@ class IndexController extends Controller
         foreach ($request->except('id') as $key => $part) {
             directores::where('id', '=', $request->id)->update(array($key => $part));
         }
-        //
+        
+    }
+
+    public function getCategorias()
+    {
+        return categorias::all();
     }
 }

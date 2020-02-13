@@ -25,4 +25,11 @@ Route::patch('categoriasPatch', 'IndexController@categoriasPatch');
 
 Route::patch('directoresPatch', 'IndexController@directoresPatch');
 
+Route::post('register', 'UserController@register');
+Route::post('login', 'UserController@authenticate');
 
+
+Route::group(['middleware' => ['jwt.verify']], function() {
+    Route::get('pay', 'UserController@testPayload');
+    Route::get('cat', 'IndexController@getCategorias');
+});
