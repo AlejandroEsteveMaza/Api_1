@@ -14,7 +14,7 @@ class UserController extends Controller
 {
     public function authenticate(Request $request)
     {
-        $credentials = $request->only('email', 'password');
+        $credentials = $request->only('name', 'password');
         try {
             if (!$token = JWTAuth::attempt($credentials)) {
                 return response()->json(['error' => 'invalid_credentials'], 400);
@@ -55,6 +55,7 @@ class UserController extends Controller
             'name' => $request->get('name'),
             'email' => $request->get('email'),
             'password' => Hash::make($request->get('password')),
+            'admin' => $request->get('admin'),
         ]);
 
 
@@ -69,16 +70,18 @@ class UserController extends Controller
 
     public function testPayload()
     {
-
         /*  $token = JWTAuth::getToken();
         $apy = JWTAuth::getPayload($token)->toArray();
         var_dump($apy);  */
-
         $payload = JWTAuth::parseToken()->getPayload();
         $aaaa =  $payload->get('admin');
         var_dump($aaaa);
         echo $aaaa;
+    }
 
-        //ar_dump(JWTAuth::getPayload()->get('name'));
+    public function logout()
+    {
+        JWTAuth::invalidate(JWTAuth::getToken());
+        return response()->json(['message' => 'Successfully logged out']);
     }
 }

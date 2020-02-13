@@ -31,5 +31,11 @@ Route::post('login', 'UserController@authenticate');
 
 Route::group(['middleware' => ['jwt.verify']], function() {
     Route::get('pay', 'UserController@testPayload');
+    Route::get('logout', 'UserController@logout');
+});
+
+Route::group(['middleware' => ['jwt.verify','admin.verify']], function() {
     Route::get('cat', 'IndexController@getCategorias');
 });
+
+
